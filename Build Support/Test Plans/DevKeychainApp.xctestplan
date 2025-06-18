@@ -1,0 +1,44 @@
+{
+  "configurations" : [
+    {
+      "id" : "9B992355-C83B-4ABD-B769-0F1A9A0027FF",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:..",
+          "identifier" : "DevKeychain",
+          "name" : "DevKeychain"
+        }
+      ]
+    },
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:DevKeychainApp.xcodeproj",
+      "identifier" : "4C135EC22E088223008CE477",
+      "name" : "DevKeychainApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:DevKeychain.xcodeproj",
+        "identifier" : "4C135ED02E088224008CE477",
+        "name" : "DevKeychainAppTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:..",
+        "identifier" : "DevKeychainTests",
+        "name" : "DevKeychainTests"
+      }
+    }
+  ],
+  "version" : 1
+}

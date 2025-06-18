@@ -1,0 +1,32 @@
+{
+  "configurations" : [
+    {
+      "id" : "20F78922-DFF7-4702-BDB6-8237BAE0957A",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:",
+          "identifier" : "DevKeychain",
+          "name" : "DevKeychain"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "DevKeychainTests",
+        "name" : "DevKeychainTests"
+      }
+    }
+  ],
+  "version" : 1
+}
