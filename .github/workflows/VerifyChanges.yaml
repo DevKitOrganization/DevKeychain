@@ -37,7 +37,6 @@ jobs:
       XCODE_PROJECT: ${{ matrix.xcode_project }}
       XCODE_SCHEME: ${{ matrix.xcode_scheme }}
       XCODE_DESTINATION: ${{ matrix.xcode_destination }}
-      XCODE_TEST_PLAN: DevTesting
     steps:
       - name: Checkout
         uses: actions/checkout@v4
