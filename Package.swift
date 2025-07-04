@@ -2,7 +2,6 @@
 
 import PackageDescription
 
-
 let swiftSettings: [SwiftSetting] = [
     .enableUpcomingFeature("ExistentialAny")
 ]
@@ -23,7 +22,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/DevKitOrganization/DevTesting", from: "1.0.0-beta.7"),
+        .package(url: "https://github.com/DevKitOrganization/DevTesting", from: "1.0.0-beta.7")
     ],
     targets: [
         .target(

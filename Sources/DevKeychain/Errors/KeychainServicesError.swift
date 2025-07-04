@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// An error from the keychain services API.
 struct KeychainServicesError: CustomStringConvertible, Error, Hashable {
     /// The underlying `OSStatus` that describes the error.

@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 @main
 struct DevKeychainAppApp: App {
     var body: some Scene {

@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// An keychain in which secrets can be created, queried, and deleted.
 public struct Keychain: Sendable {
     /// The underlying keychain service that the keychain uses.
@@ -84,13 +83,13 @@ extension Keychain {
     public struct QueryOptions: Sendable {
         /// Whether queries should ignore string case when comparing strings.
         public var isCaseInsensitive: Bool
-        
+
         /// The maximum number of items that queries should return.
         ///
         /// `nil` indicates no maximum. `nil` by default.
         public var limit: Int?
 
-        
+
         /// Creates new query options.
         ///
         /// - Parameters:
@@ -105,10 +104,10 @@ extension Keychain {
 
 
         /// A dictionary-representation of the options to pass to the keychain services API.
-        var optionDictionary: [CFString : Any] {
+        var optionDictionary: [CFString: Any] {
             return [
                 kSecMatchCaseInsensitive: isCaseInsensitive,
-                kSecMatchLimit: limit ?? kSecMatchLimitAll
+                kSecMatchLimit: limit ?? kSecMatchLimitAll,
             ]
         }
     }

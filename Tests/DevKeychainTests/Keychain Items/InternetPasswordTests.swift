@@ -6,11 +6,11 @@
 //
 
 import DevKeychain
-@testable import struct DevKeychain.InternetPassword
 import DevTesting
 import Foundation
 import Testing
 
+@testable import struct DevKeychain.InternetPassword
 
 struct InternetPasswordTests: RandomValueGenerating {
     var randomNumberGenerator = makeRandomNumberGenerator()
@@ -171,7 +171,6 @@ struct InternetPassword_AdditionAttributesTests: RandomValueGenerating {
     }
 
 
-
     @Test
     mutating func attributesDictionaryIsCorrect() {
         let server = randomAlphanumericString()
@@ -234,7 +233,7 @@ struct InternetPassword_AdditionAttributesTests: RandomValueGenerating {
             [
                 kSecAttrServer: server,
                 kSecAttrAccount: account,
-                kSecValueData: data
+                kSecValueData: data,
             ] as CFDictionary
         )
 
@@ -267,7 +266,7 @@ struct InternetPassword_QueryTests: RandomValueGenerating {
             kSecAttrAccount: account,
             kSecAttrServer: server,
             kSecClass: kSecClassInternetPassword,
-            kSecUseDataProtectionKeychain: true
+            kSecUseDataProtectionKeychain: true,
         ]
 
         for isServerNil in [false, true] {
@@ -340,7 +339,7 @@ struct InternetPassword_QueryTests: RandomValueGenerating {
             [
                 kSecAttrAccount: item.account,
                 kSecAttrServer: item.server,
-                kSecValueData: item.data
+                kSecValueData: item.data,
             ]
         }
 

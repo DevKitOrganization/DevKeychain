@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum MockError: CaseIterable, Error {
     case error1
     case error2

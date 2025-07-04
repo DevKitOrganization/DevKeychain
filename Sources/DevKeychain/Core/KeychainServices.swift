@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// A type that can provides access to Apple’s keychain services API.
 ///
 /// This protocol exists for dependency injection purposes.

@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// An internet password keychain item.
 public struct InternetPassword: Hashable, Sendable {
     /// The item’s server.
@@ -42,7 +41,7 @@ extension InternetPassword {
     /// Creates a new internet password with the specified attributes.
     ///
     /// - Parameter attributes: A dictionary of attributes from the keychain services API.
-    init(attributes: [CFString : Any]) throws {
+    init(attributes: [CFString: Any]) throws {
         self.init(
             server: try attributes.value(forKeychainAttribute: kSecAttrServer, type: String.self),
             account: try attributes.value(forKeychainAttribute: kSecAttrAccount, type: String.self),
@@ -96,7 +95,7 @@ extension InternetPassword {
         }
 
 
-        public var attributesDictionary: [CFString : Any] {
+        public var attributesDictionary: [CFString: Any] {
             return [
                 kSecAttrAccount: account,
                 kSecAttrServer: server,
@@ -147,7 +146,7 @@ extension InternetPassword {
         }
 
 
-        public var attributesDictionary: [CFString : Any] {
+        public var attributesDictionary: [CFString: Any] {
             var dictionary: [CFString: Any] = [
                 kSecClass: kSecClassInternetPassword,
                 kSecUseDataProtectionKeychain: true,
@@ -165,7 +164,7 @@ extension InternetPassword {
         }
 
 
-        public var returnDictionary: [CFString : Any] {
+        public var returnDictionary: [CFString: Any] {
             return [
                 kSecReturnAttributes: true,
                 kSecReturnData: true,
@@ -174,11 +173,11 @@ extension InternetPassword {
 
 
         public func mapMatchingItems(_ rawItems: AnyObject) throws -> [InternetPassword] {
-            let attributesArray: [[CFString : Any]]
+            let attributesArray: [[CFString: Any]]
 
-            if let singleItem = rawItems as? [CFString : Any] {
+            if let singleItem = rawItems as? [CFString: Any] {
                 attributesArray = [singleItem]
-            } else if let array = rawItems as? [[CFString : Any]] {
+            } else if let array = rawItems as? [[CFString: Any]] {
                 attributesArray = array
             } else {
                 throw KeychainItemMappingError.dataCorrupted

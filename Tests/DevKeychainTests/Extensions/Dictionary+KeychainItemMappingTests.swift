@@ -6,11 +6,11 @@
 //
 
 import DevKeychain
-@testable import struct DevKeychain.Keychain
 import DevTesting
 import Foundation
 import Testing
 
+@testable import struct DevKeychain.Keychain
 
 struct Dictionary_KeychainItemMappingTests: RandomValueGenerating {
     var randomNumberGenerator = makeRandomNumberGenerator()

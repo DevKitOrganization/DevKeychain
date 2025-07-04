@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 extension Dictionary where Key == CFString, Value == Any {
     /// Accesses the value for an attribute of a specified type, throwing errors as appropriate.
     ///

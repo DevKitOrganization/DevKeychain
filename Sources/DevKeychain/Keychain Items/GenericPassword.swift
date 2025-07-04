@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// A generic password keychain item.
 public struct GenericPassword: Hashable, Sendable {
     /// The item’s service.
@@ -21,7 +20,7 @@ public struct GenericPassword: Hashable, Sendable {
     /// If this data is textual, you can use ``password(using:)`` to easily access it.
     public let data: Data
 
-    
+
     /// Returns the item’s secret data as a string.
     ///
     /// - Parameter encoding: The data’s string encoding. Defaults to `.utf8`.
@@ -42,7 +41,7 @@ extension GenericPassword {
     /// Creates a new generic password with the specified attributes.
     ///
     /// - Parameter attributes: A dictionary of attributes from the keychain services API.
-    init(attributes: [CFString : Any]) throws {
+    init(attributes: [CFString: Any]) throws {
         self.init(
             service: try attributes.value(forKeychainAttribute: kSecAttrService, type: String.self),
             account: try attributes.value(forKeychainAttribute: kSecAttrAccount, type: String.self),
@@ -96,7 +95,7 @@ extension GenericPassword {
         }
 
 
-        public var attributesDictionary: [CFString : Any] {
+        public var attributesDictionary: [CFString: Any] {
             return [
                 kSecAttrAccount: account,
                 kSecAttrService: service,
@@ -133,7 +132,7 @@ extension GenericPassword {
         /// If `nil`, matching items can have any account. `nil` by default.
         public var account: String?
 
-        
+
         /// Creates a new generic password query.
         ///
         /// - Parameters:
@@ -147,7 +146,7 @@ extension GenericPassword {
         }
 
 
-        public var attributesDictionary: [CFString : Any] {
+        public var attributesDictionary: [CFString: Any] {
             var dictionary: [CFString: Any] = [
                 kSecClass: kSecClassGenericPassword,
                 kSecUseDataProtectionKeychain: true,
@@ -165,7 +164,7 @@ extension GenericPassword {
         }
 
 
-        public var returnDictionary: [CFString : Any] {
+        public var returnDictionary: [CFString: Any] {
             return [
                 kSecReturnAttributes: true,
                 kSecReturnData: true,
@@ -174,11 +173,11 @@ extension GenericPassword {
 
 
         public func mapMatchingItems(_ rawItems: AnyObject) throws -> [GenericPassword] {
-            let attributesArray: [[CFString : Any]]
+            let attributesArray: [[CFString: Any]]
 
-            if let singleItem = rawItems as? [CFString : Any] {
+            if let singleItem = rawItems as? [CFString: Any] {
                 attributesArray = [singleItem]
-            } else if let array = rawItems as? [[CFString : Any]] {
+            } else if let array = rawItems as? [[CFString: Any]] {
                 attributesArray = array
             } else {
                 throw KeychainItemMappingError.dataCorrupted
