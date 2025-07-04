@@ -6,11 +6,11 @@
 //
 
 import DevKeychain
-@testable import struct DevKeychain.Keychain
 import DevTesting
 import Foundation
 import Testing
 
+@testable import struct DevKeychain.Keychain
 
 struct KeychainTests: RandomValueGenerating {
     var randomNumberGenerator = makeRandomNumberGenerator()
@@ -259,7 +259,7 @@ struct Keychain_QueryOptionsTests: RandomValueGenerating {
 
         let expected: [CFString: Any] = [
             kSecMatchCaseInsensitive: isCaseInsensitive,
-            kSecMatchLimit: limit ?? kSecMatchLimitAll
+            kSecMatchLimit: limit ?? kSecMatchLimitAll,
         ]
 
         #expect(options.optionDictionary as CFDictionary == expected as CFDictionary)

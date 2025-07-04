@@ -9,7 +9,6 @@ import DevKeychain
 import DevTesting
 import Foundation
 
-
 extension RandomValueGenerating {
     mutating func randomError() -> MockError {
         return randomCase(of: MockError.self)!

@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// A type that describes a query for specific kinds of items in the keychain.
 public protocol KeychainItemQuery<Item>: Sendable {
     /// The type of item that the query returns.

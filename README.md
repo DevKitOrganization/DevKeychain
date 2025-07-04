@@ -1,9 +1,7 @@
 # DevKeychain
 
-Description forthcoming.
-
-DevKeychain is fully documented and tested and supports iOS 18+, macOS 15+, tvOS 18+, visionOS 2+,
-and watchOS 11+.
+DevKeychain is a small Swift package that provides a Swift interface to Apple’s keychain services. It is fully
+documented and tested and supports iOS 18+, macOS 15+, tvOS 18+, visionOS 2+, and watchOS 11+.
 
 View our [changelog](CHANGELOG.md) to see what’s new.
 
@@ -15,6 +13,14 @@ the [Swift API Design Guidelines][SwiftAPIDesignGuidelines]. We take pride in th
 public interfaces are fully documented and tested. We aim for overall test coverage over 99%.
 
 [SwiftAPIDesignGuidelines]: https://swift.org/documentation/api-design-guidelines/
+
+### Development Setup
+
+To set up the development environment:
+
+  1. Run `Scripts/install-git-hooks` to install pre-commit hooks that automatically check code
+    formatting.
+  2. Use `Scripts/lint` to manually check code formatting at any time.
 
 
 ## Bugs and Feature Requests

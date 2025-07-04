@@ -5,11 +5,11 @@
 //  Created by Prachi Gauriar on 6/22/25.
 //
 
-@testable import DevKeychain
 import DevTesting
 import Foundation
 import Testing
 
+@testable import DevKeychain
 
 struct StandardKeychainServicesTests: RandomValueGenerating {
     var randomNumberGenerator = makeRandomNumberGenerator()
@@ -29,7 +29,7 @@ struct StandardKeychainServicesTests: RandomValueGenerating {
         let serviceQuery: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
-            kSecReturnAttributes: true
+            kSecReturnAttributes: true,
         ]
 
         try keychainServices.deleteItems(matchingQuery: serviceQuery)
@@ -80,7 +80,7 @@ struct StandardKeychainServicesTests: RandomValueGenerating {
         let object = try keychainServices.items(
             matchingQuery: [
                 kSecClass: kSecClassGenericPassword,
-                kSecAttrService: randomAlphanumericString(count: 32)
+                kSecAttrService: randomAlphanumericString(count: 32),
             ]
         )
         let items = try #require(object as? [Any])
@@ -106,7 +106,7 @@ struct StandardKeychainServicesTests: RandomValueGenerating {
             try keychainServices.deleteItems(
                 matchingQuery: [
                     kSecClass: kSecClassGenericPassword,
-                    kSecAttrService: randomAlphanumericString(count: 32)
+                    kSecAttrService: randomAlphanumericString(count: 32),
                 ]
             )
         }

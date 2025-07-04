@@ -6,11 +6,11 @@
 //
 
 import DevKeychain
-@testable import struct DevKeychain.GenericPassword
 import DevTesting
 import Foundation
 import Testing
 
+@testable import struct DevKeychain.GenericPassword
 
 struct GenericPasswordTests: RandomValueGenerating {
     var randomNumberGenerator = makeRandomNumberGenerator()
@@ -171,7 +171,6 @@ struct GenericPassword_AdditionAttributesTests: RandomValueGenerating {
     }
 
 
-
     @Test
     mutating func attributesDictionaryIsCorrect() {
         let service = randomAlphanumericString()
@@ -234,7 +233,7 @@ struct GenericPassword_AdditionAttributesTests: RandomValueGenerating {
             [
                 kSecAttrService: service,
                 kSecAttrAccount: account,
-                kSecValueData: data
+                kSecValueData: data,
             ] as CFDictionary
         )
 
@@ -267,7 +266,7 @@ struct GenericPassword_QueryTests: RandomValueGenerating {
             kSecAttrAccount: account,
             kSecAttrService: service,
             kSecClass: kSecClassGenericPassword,
-            kSecUseDataProtectionKeychain: true
+            kSecUseDataProtectionKeychain: true,
         ]
 
         for isServiceNil in [false, true] {
@@ -340,7 +339,7 @@ struct GenericPassword_QueryTests: RandomValueGenerating {
             [
                 kSecAttrAccount: item.account,
                 kSecAttrService: item.service,
-                kSecValueData: item.data
+                kSecValueData: item.data,
             ]
         }
 

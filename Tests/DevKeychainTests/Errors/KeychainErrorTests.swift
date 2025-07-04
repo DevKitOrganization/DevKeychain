@@ -5,11 +5,11 @@
 //  Created by Prachi Gauriar on 6/19/25.
 //
 
-@testable import struct DevKeychain.KeychainServicesError
 import DevTesting
 import Foundation
 import Testing
 
+@testable import struct DevKeychain.KeychainServicesError
 
 struct KeychainServicesErrorTests: RandomValueGenerating {
     var randomNumberGenerator = makeRandomNumberGenerator()
