@@ -19,7 +19,7 @@ struct GenericPasswordIntegrationTests: RandomValueGenerating {
     mutating func addQueryAndDeleteItems() throws {
         let service = randomAlphanumericString(count: 64)
         let accounts = Array(
-            Set(count: random(Int.self, in: 3 ... 5)) {
+            Set(count: randomInt(in: 3 ... 5)) {
                 randomAlphanumericString()
             }
         )

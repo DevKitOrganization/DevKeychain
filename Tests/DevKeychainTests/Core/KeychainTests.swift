@@ -164,13 +164,13 @@ struct KeychainTests: RandomValueGenerating {
 
         // Create some overlap between query dictionary and return dictionary
         var attributesDictionary = randomKeychainDictionary() as [CFString: Any]
-        attributesDictionary[kSecMatchLimit] = random(Float64.self, in: -10 ... 0)
-        attributesDictionary[kSecMatchCaseInsensitive] = random(Int.self, in: 2 ... .max)
+        attributesDictionary[kSecMatchLimit] = randomFloat64(in: -10 ... 0)
+        attributesDictionary[kSecMatchCaseInsensitive] = randomInt(in: 2 ... .max)
 
         var returnDictionary = randomKeychainDictionary() as [CFString: Any]
         returnDictionary[attributesDictionary.keys.randomElement()!] = randomAlphanumericString()
-        returnDictionary[kSecMatchLimit] = random(Float64.self, in: -10 ... 0)
-        returnDictionary[kSecMatchCaseInsensitive] = random(Int.self, in: 2 ... .max)
+        returnDictionary[kSecMatchLimit] = randomFloat64(in: -10 ... 0)
+        returnDictionary[kSecMatchCaseInsensitive] = randomInt(in: 2 ... .max)
 
         let keychainService = MockKeychainServices()
         keychainService.itemsStub = ThrowingStub(defaultResult: .success(expectedObject))
@@ -181,7 +181,7 @@ struct KeychainTests: RandomValueGenerating {
         query.returnDictionaryStub = Stub(defaultReturnValue: returnDictionary)
 
         var options = randomKeychainQueryOptions()
-        options.limit = isLimitNil ? nil : random(Int.self, in: 1 ... .max)
+        options.limit = isLimitNil ? nil : randomInt(in: 1 ... .max)
 
         let convertedValue = randomUUID()
         query.mapStub = ThrowingStub(defaultResult: .success([convertedValue]))
@@ -244,7 +244,7 @@ struct Keychain_QueryOptionsTests: RandomValueGenerating {
     @Test
     mutating func initSetsValues() {
         let isCaseInsensitive = randomBool()
-        let limit = randomOptional(random(Int.self, in: .min ... .max))
+        let limit = randomOptional(randomInt(in: .min ... .max))
         let options = Keychain.QueryOptions(isCaseInsensitive: isCaseInsensitive, limit: limit)
         #expect(options.isCaseInsensitive == isCaseInsensitive)
         #expect(options.limit == limit)
@@ -254,7 +254,7 @@ struct Keychain_QueryOptionsTests: RandomValueGenerating {
     @Test(arguments: [false, true])
     mutating func oteamptionDictionaryIsCorrect(isLimitNil: Bool) {
         let isCaseInsensitive = randomBool()
-        let limit = isLimitNil ? nil : random(Int.self, in: .min ... .max)
+        let limit = isLimitNil ? nil : randomInt(in: .min ... .max)
         let options = Keychain.QueryOptions(isCaseInsensitive: isCaseInsensitive, limit: limit)
 
         let expected: [CFString: Any] = [
