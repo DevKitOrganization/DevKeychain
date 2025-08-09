@@ -87,7 +87,7 @@ struct InternetPasswordTests: RandomValueGenerating {
 
         for (key, type) in keysAndTypes {
             var attributes = dictionary
-            attributes[key] = random(Int.self, in: .min ... .max)
+            attributes[key] = randomInt(in: .min ... .max)
 
             #expect(throws: KeychainItemMappingError.attributeTypeMismatch(attribute: key as String, type: type)) {
                 _ = try InternetPassword(attributes: attributes)
@@ -327,7 +327,7 @@ struct InternetPassword_QueryTests: RandomValueGenerating {
             account: randomOptional(randomAlphanumericString())
         )
 
-        let expectedItems = Array(count: random(Int.self, in: 3 ... 5)) {
+        let expectedItems = Array(count: randomInt(in: 3 ... 5)) {
             InternetPassword(
                 server: randomAlphanumericString(),
                 account: randomAlphanumericString(),

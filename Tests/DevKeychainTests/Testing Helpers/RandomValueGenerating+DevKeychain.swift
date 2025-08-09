@@ -16,7 +16,7 @@ extension RandomValueGenerating {
 
 
     mutating func randomKeychainDictionary() -> [String: String] {
-        return Dictionary(count: random(Int.self, in: 3 ... 5)) {
+        return Dictionary(count: randomInt(in: 3 ... 5)) {
             (randomAlphanumericString(), randomAlphanumericString())
         }
     }
@@ -25,7 +25,7 @@ extension RandomValueGenerating {
     mutating func randomKeychainQueryOptions() -> Keychain.QueryOptions {
         return .init(
             isCaseInsensitive: randomBool(),
-            limit: randomOptional(random(Int.self, in: 1 ... 10))
+            limit: randomOptional(randomInt(in: 1 ... 10))
         )
     }
 }
