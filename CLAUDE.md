@@ -8,7 +8,7 @@ repository.
 
 DevKeychain is a Swift package providing a modern, type-safe interface to Apple's keychain
 services. It supports iOS 18+, macOS 15+, tvOS 18+, visionOS 2+, and watchOS 11+, requiring
-Swift 6.1 toolchain.
+Swift 6.2+ toolchain.
 
 
 ## Common Development Commands
@@ -121,18 +121,22 @@ Uses **Swift Testing** framework with comprehensive mocking:
 
 ## CI/CD Configuration
 
-The project uses GitHub Actions with comprehensive testing:
+The project uses GitHub Actions for continuous integration:
 
-  - Multi-platform testing (iOS, macOS, tvOS, watchOS)
-  - Code coverage reporting with xccovPretty
-  - Swift-format validation
-  - Test plans in `Build Support/Test Plans/`
+  - **Linting**: Automatically checks code formatting on all pull requests using `swift format`
+  - **Testing**: Runs tests on macOS (iOS, tvOS, and watchOS testing are disabled in CI due to
+    reliability issues)
+  - **Coverage**: Generates code coverage reports using xccovPretty
+
+For comprehensive cross-platform testing, developers should run `Scripts/test-all-platforms`
+locally or rely on the pre-push git hook which automatically runs all platform tests before
+pushing changes.
 
 
 ## Platform Requirements
 
-  - Swift 6.1 toolchain required
-  - Xcode 16.4 for CI/CD
+  - Swift 6.2+ toolchain required
+  - Xcode 26.0 for CI/CD
   - Apple platforms only (iOS 18+, macOS 15+, tvOS 18+, visionOS 2+, watchOS 11+)
   - Uses modern Swift concurrency features
 
@@ -144,10 +148,11 @@ The `Scripts/` directory contains utility scripts for development workflow autom
 ### Available Scripts
 
 **`Scripts/install-git-hooks`**:
-  - Installs pre-commit git hooks that automatically run lint checks
-  - Creates `.git/hooks/pre-commit` that calls `Scripts/lint`
-  - Prevents commits with formatting issues
-  - Run once per repository to set up automated code quality checks
+  - Installs pre-commit and pre-push git hooks for automated quality checks
+  - Creates `.git/hooks/pre-commit` that calls `Scripts/lint` for formatting validation
+  - Creates `.git/hooks/pre-push` that calls `Scripts/test-all-platforms` for comprehensive testing
+  - Prevents commits with formatting issues and pushes with test failures
+  - Run once per repository to set up automated code quality and testing workflow
 
 **`Scripts/lint`**:
   - Runs swift-format lint validation with strict mode enabled
@@ -155,12 +160,25 @@ The `Scripts/` directory contains utility scripts for development workflow autom
   - Returns non-zero exit code if formatting issues are found
   - Used by pre-commit hooks and can be run manually for code quality verification
 
+**`Scripts/test-all-platforms`**:
+  - Runs comprehensive tests across all supported Apple platforms
+  - Tests on iOS Simulator (iPhone 16 Pro), macOS, tvOS Simulator (Apple TV 4K), and watchOS
+    Simulator (Apple Watch Series 10)
+  - Uses different project configurations: DevKeychainApp scheme for iOS, DevKeychain scheme for
+    other platforms
+  - Provides colored output with timestamps and clear success/failure indicators
+  - Returns non-zero exit code if any platform tests fail
+  - Essential for local cross-platform validation since CI only tests macOS
+
 ### Usage Patterns
 
-  - Run `Scripts/install-git-hooks` after cloning the repository
-  - Pre-commit hooks will automatically run `Scripts/lint` before each commit
-  - Manual lint checking: `Scripts/lint`
-  - Both scripts work from any directory by calculating repository root path
+  - Run `Scripts/install-git-hooks` after cloning the repository for complete automation
+  - Pre-commit hooks automatically run `Scripts/lint` before each commit
+  - Pre-push hooks automatically run `Scripts/test-all-platforms` before each push
+  - Manual operations:
+    - Code formatting check: `Scripts/lint`
+    - Cross-platform testing: `Scripts/test-all-platforms`
+  - All scripts work from any directory by calculating repository root path
 
 
 ## Key Files for Understanding

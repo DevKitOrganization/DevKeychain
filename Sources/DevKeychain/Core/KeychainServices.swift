@@ -34,10 +34,26 @@ protocol KeychainServices: Sendable {
 /// This type uses standard Security framework functions like `SecItemAdd(_:_:)`, `SecItemCopyMatching(_:_:)`, and
 /// `SecItemDelete(_:)` to implement its behavior.
 struct StandardKeychainServices: KeychainServices {
+    /// A closure to use to add an item to the keychain.
+    ///
+    /// By default, this is `SecItemAdd(_:_:)`. It is provided for dependency injection purposes.
+    var addItem: @Sendable (CFDictionary, UnsafeMutablePointer<CFTypeRef?>?) -> OSStatus = SecItemAdd
+
+    /// A closure to use to copy keychain items matching a query.
+    ///
+    /// By default, this is `SecItemCopyMatching(_:_:)`. It is provided for dependency injection purposes.
+    var copyMatchingItems: @Sendable (CFDictionary, UnsafeMutablePointer<CFTypeRef?>?) -> OSStatus = SecItemCopyMatching
+
+    /// A closure to use to delete keychain items matching a query.
+    ///
+    /// By default, this is `SecItemDelete(_:)`. It is provided for dependency injection purposes.
+    var deleteItems: @Sendable (CFDictionary) -> OSStatus = SecItemDelete
+
+
     func addItem(withAttributes attributes: [CFString: Any]) throws -> AnyObject? {
         var result: AnyObject?
 
-        let osStatus = SecItemAdd(attributes as CFDictionary, &result)
+        let osStatus = addItem(attributes as CFDictionary, &result)
         guard osStatus == errSecSuccess else {
             throw KeychainServicesError(osStatus: osStatus)
         }
@@ -49,7 +65,7 @@ struct StandardKeychainServices: KeychainServices {
     func items(matchingQuery query: [CFString: Any]) throws -> AnyObject? {
         var result: AnyObject?
 
-        let osStatus = SecItemCopyMatching(query as CFDictionary, &result)
+        let osStatus = copyMatchingItems(query as CFDictionary, &result)
         switch osStatus {
         case errSecSuccess:
             return result
@@ -62,7 +78,7 @@ struct StandardKeychainServices: KeychainServices {
 
 
     func deleteItems(matchingQuery query: [CFString: Any]) throws {
-        let osStatus = SecItemDelete(query as CFDictionary)
+        let osStatus = deleteItems(query as CFDictionary)
         if osStatus != errSecSuccess && osStatus != errSecItemNotFound {
             throw KeychainServicesError(osStatus: osStatus)
         }

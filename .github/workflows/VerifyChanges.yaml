@@ -14,9 +14,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Select Xcode 16.4
+      - name: Select Xcode 26.0.0
         run: |
-          sudo xcode-select -s /Applications/Xcode_16.4.0.app
+          sudo xcode-select -s /Applications/Xcode_26.0.0.app
       - name: Lint
         run: |
           Scripts/lint
@@ -28,22 +28,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: iOS
-            xcode_destination: "platform=iOS Simulator,name=iPhone 16 Pro"
-            xcode_project: "DevKeychain.xcodeproj"
-            xcode_scheme: "DevKeychainApp"
+#           - platform: iOS
+#             xcode_destination: "platform=iOS Simulator,name=iPhone 16 Pro"
+#             xcode_project: "DevKeychain.xcodeproj"
+#             xcode_scheme: "DevKeychainApp"
           - platform: macOS
             xcode_destination: "platform=macOS,arch=arm64"
             xcode_project: ""
             xcode_scheme: "DevKeychain"
-          - platform: tvOS
-            xcode_destination: "platform=tvOS Simulator,name=Apple TV 4K (3rd generation)"
-            xcode_project: ""
-            xcode_scheme: "DevKeychain"
-          - platform: watchOS
-            xcode_destination: "platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)"
-            xcode_project: ""
-            xcode_scheme: "DevKeychain"
+#           - platform: tvOS
+#             xcode_destination: "platform=tvOS Simulator,name=Apple TV 4K (3rd generation)"
+#             xcode_project: ""
+#             xcode_scheme: "DevKeychain"
+#           - platform: watchOS
+#             xcode_destination: "platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)"
+#             xcode_project: ""
+#             xcode_scheme: "DevKeychain"
     env:
       DEV_BUILDS: DevBuilds/Sources
       XCCOV_PRETTY_VERSION: 1.2.0
@@ -80,9 +80,9 @@ jobs:
             **/*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
             Package.resolved
           verbose: true
-      - name: Select Xcode 16.4
+      - name: Select Xcode 26.0.0
         run: |
-          sudo xcode-select -s /Applications/Xcode_16.4.0.app
+          sudo xcode-select -s /Applications/Xcode_26.0.0.app
       - name: Build for Testing
         run: |
           "$DEV_BUILDS"/build_and_test.sh --action build-for-testing
@@ -128,9 +128,9 @@ jobs:
       - name: Download xccovPretty output
         uses: actions/download-artifact@v4
         with:
-          name: xccovPrettyOutput-iOS
+          name: xccovPrettyOutput-macOS
       - name: Post Code Coverage Comment
         uses: thollander/actions-comment-pull-request@v3
         with:
-          file-path: xccovPretty-iOS.output
-          comment-tag: codeCoverage-iOS
+          file-path: xccovPretty-macOS.output
+          comment-tag: codeCoverage-macOS
