@@ -1,4 +1,4 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 6.2
 
 import PackageDescription
 
@@ -23,7 +23,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/DevKitOrganization/DevTesting", from: "1.0.0-beta.10")
+        .package(url: "https://github.com/DevKitOrganization/DevTesting", from: "1.0.0-beta.11")
     ],
     targets: [
         .target(
