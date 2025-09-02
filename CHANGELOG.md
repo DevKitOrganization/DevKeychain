@@ -1,7 +1,7 @@
 # DevKeychain Changelog
 
 
-## 1.0.0 – TBD
+## 1.0.0: September 2, 2025
 
 This is the first release of DevKeychain. The initial feature set includes
 

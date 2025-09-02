@@ -23,7 +23,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/DevKitOrganization/DevTesting", from: "1.0.0-beta.11")
+        .package(url: "https://github.com/DevKitOrganization/DevTesting", from: "1.0.0")
     ],
     targets: [
         .target(
