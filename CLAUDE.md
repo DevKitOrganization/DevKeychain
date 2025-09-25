@@ -7,8 +7,7 @@ repository.
 ## Project Overview
 
 DevKeychain is a Swift package providing a modern, type-safe interface to Apple's keychain
-services. It supports iOS 18+, macOS 15+, tvOS 18+, visionOS 2+, and watchOS 11+, requiring
-Swift 6.2+ toolchain.
+services. It supports version 26 of Apple's OSes and requires a Swift 6.2+ toolchain.
 
 
 ## Common Development Commands
@@ -137,7 +136,7 @@ pushing changes.
 
   - Swift 6.2+ toolchain required
   - Xcode 26.0 for CI/CD
-  - Apple platforms only (iOS 18+, macOS 15+, tvOS 18+, visionOS 2+, watchOS 11+)
+  - Apple platforms only (iOS/macOS/tvOS/visionOS/watchOS version 26)
   - Uses modern Swift concurrency features
 
 
