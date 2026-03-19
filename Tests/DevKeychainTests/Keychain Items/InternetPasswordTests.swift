@@ -143,7 +143,7 @@ struct InternetPassword_AdditionAttributesTests: RandomValueGenerating {
             server: server,
             account: account,
             password: password,
-            encoding: .ascii
+            encoding: .ascii,
         )
         #expect(attributes == nil)
     }
@@ -161,7 +161,7 @@ struct InternetPassword_AdditionAttributesTests: RandomValueGenerating {
                 server: server,
                 account: account,
                 password: password,
-                encoding: .utf8
+                encoding: .utf8,
             )
         )
 
@@ -198,7 +198,7 @@ struct InternetPassword_AdditionAttributesTests: RandomValueGenerating {
         let attributes = InternetPassword.AdditionAttributes(
             server: randomAlphanumericString(),
             account: randomAlphanumericString(),
-            data: randomData()
+            data: randomData(),
         )
 
         #expect(throws: KeychainItemMappingError.dataCorrupted) {
@@ -212,7 +212,7 @@ struct InternetPassword_AdditionAttributesTests: RandomValueGenerating {
         let attributes = InternetPassword.AdditionAttributes(
             server: randomAlphanumericString(),
             account: randomAlphanumericString(),
-            data: randomData()
+            data: randomData(),
         )
 
         #expect(throws: KeychainItemMappingError.self) {
@@ -273,7 +273,7 @@ struct InternetPassword_QueryTests: RandomValueGenerating {
             for isAccountNil in [false, true] {
                 let query = InternetPassword.Query(
                     server: isServerNil ? nil : server,
-                    account: isAccountNil ? nil : account
+                    account: isAccountNil ? nil : account,
                 )
 
                 var expectedDictionary = fullAttributesDictionary
@@ -295,7 +295,7 @@ struct InternetPassword_QueryTests: RandomValueGenerating {
     mutating func returnDictionaryIsCorrect() throws {
         let query = InternetPassword.Query(
             server: randomOptional(randomAlphanumericString()),
-            account: randomOptional(randomAlphanumericString())
+            account: randomOptional(randomAlphanumericString()),
         )
 
         let expectedDictionary = [
@@ -311,7 +311,7 @@ struct InternetPassword_QueryTests: RandomValueGenerating {
     mutating func mapThrowsErrorWhenRawItemsIsIncorrectType() {
         let query = InternetPassword.Query(
             server: randomOptional(randomAlphanumericString()),
-            account: randomOptional(randomAlphanumericString())
+            account: randomOptional(randomAlphanumericString()),
         )
 
         #expect(throws: KeychainItemMappingError.dataCorrupted) {
@@ -324,14 +324,14 @@ struct InternetPassword_QueryTests: RandomValueGenerating {
     mutating func mapReturnsItemsWithCorrectValues() throws {
         let query = InternetPassword.Query(
             server: randomOptional(randomAlphanumericString()),
-            account: randomOptional(randomAlphanumericString())
+            account: randomOptional(randomAlphanumericString()),
         )
 
         let expectedItems = Array(count: randomInt(in: 3 ... 5)) {
             InternetPassword(
                 server: randomAlphanumericString(),
                 account: randomAlphanumericString(),
-                data: randomData()
+                data: randomData(),
             )
         }
 

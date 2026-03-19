@@ -25,7 +25,7 @@ extension RandomValueGenerating {
     mutating func randomKeychainQueryOptions() -> Keychain.QueryOptions {
         return .init(
             isCaseInsensitive: randomBool(),
-            limit: randomOptional(randomInt(in: 1 ... 10))
+            limit: randomOptional(randomInt(in: 1 ... 10)),
         )
     }
 }

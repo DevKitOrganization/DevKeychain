@@ -45,7 +45,7 @@ extension GenericPassword {
         self.init(
             service: try attributes.value(forKeychainAttribute: kSecAttrService, type: String.self),
             account: try attributes.value(forKeychainAttribute: kSecAttrAccount, type: String.self),
-            data: try attributes.value(forKeychainAttribute: kSecValueData, type: Data.self)
+            data: try attributes.value(forKeychainAttribute: kSecValueData, type: Data.self),
         )
     }
 }

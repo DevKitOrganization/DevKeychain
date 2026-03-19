@@ -35,7 +35,7 @@ struct InternetPasswordIntegrationTests: RandomValueGenerating {
             let attributes = InternetPassword.AdditionAttributes(
                 server: server,
                 account: account,
-                data: randomData()
+                data: randomData(),
             )
 
             let addedItem = try keychain.addItem(with: attributes)

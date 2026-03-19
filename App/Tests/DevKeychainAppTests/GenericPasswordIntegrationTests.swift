@@ -35,7 +35,7 @@ struct GenericPasswordIntegrationTests: RandomValueGenerating {
             let attributes = GenericPassword.AdditionAttributes(
                 service: service,
                 account: account,
-                data: randomData()
+                data: randomData(),
             )
 
             let addedItem = try keychain.addItem(with: attributes)

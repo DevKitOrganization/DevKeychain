@@ -27,7 +27,7 @@ enum KeychainItemMappingError: Error, Equatable {
             return lhsAttribute == rhsAttribute
         case (
             .attributeTypeMismatch(let lhsAttribute, let lhsType),
-            .attributeTypeMismatch(let rhsAttribute, let rhsType)
+            .attributeTypeMismatch(let rhsAttribute, let rhsType),
         ):
             return lhsAttribute == rhsAttribute && lhsType == rhsType
         default:
