@@ -10,37 +10,23 @@ DevKeychain is a Swift package providing a modern, type-safe interface to Apple'
 services. It supports version 26 of Apple's OSes and requires a Swift 6.2+ toolchain.
 
 
-## Common Development Commands
+## Development Commands
 
 ### Building and Testing
 
-    # Build the package
-    swift build
-
-    # Run all tests
-    swift test
-
-    # Run specific test
-    swift test --filter <TestName>
-
-    # Build and test with code coverage
-    swift test --enable-code-coverage
+  - **Build**: `swift build`
+  - **Test all**: `swift test`
+  - **Test specific**: `swift test --filter <TestName>`
+  - **Test with coverage**: `swift test --enable-code-coverage`
 
 ### Code Quality
 
-    # Format code (requires swift-format)
-    swift-format --in-place --recursive Sources/ Tests/
-
-    # Check formatting
-    swift-format --recursive Sources/ Tests/
+  - **Lint**: `Scripts/lint` (uses `swift format lint --recursive --strict`)
+  - **Format**: `Scripts/format` (uses `swift format --in-place --recursive`)
 
 ### Git Hooks
 
-    # Install pre-commit hooks (if Scripts directory exists)
-    Scripts/install-git-hooks
-
-    # Run linting manually
-    Scripts/lint
+  - **Install**: `Scripts/install-git-hooks` (installs pre-push hook that runs lint)
 
 
 ## Architecture Overview
@@ -123,21 +109,78 @@ Uses **Swift Testing** framework with comprehensive mocking:
 The project uses GitHub Actions for continuous integration:
 
   - **Linting**: Automatically checks code formatting on all pull requests using `swift format`
-  - **Testing**: Runs tests on macOS (iOS, tvOS, and watchOS testing are disabled in CI due to
-    reliability issues)
+  - **Testing**: Builds and tests on iOS, macOS, tvOS, and watchOS
   - **Coverage**: Generates code coverage reports using xccovPretty
-
-For comprehensive cross-platform testing, developers should run `Scripts/test-all-platforms`
-locally or rely on the pre-push git hook which automatically runs all platform tests before
-pushing changes.
+  - Uses Xcode 26.3 and macOS 26 runners
 
 
 ## Platform Requirements
 
   - Swift 6.2+ toolchain required
-  - Xcode 26.0 for CI/CD
+  - Xcode 26.3 for CI/CD
   - Apple platforms only (iOS/macOS/tvOS/visionOS/watchOS version 26)
   - Uses modern Swift concurrency features
+
+
+## Testing and Mocking Standards
+
+### Test Mock Architecture
+
+The codebase uses a consistent stub-based mocking pattern built on the DevTesting framework:
+
+#### Core Mock Patterns
+
+  - **Stub-based mocks**: All mocks use `Stub<Input, Output>` or
+    `ThrowingStub<Input, Output, Error>`
+  - **Force-unwrapped stubs**: Stub properties are declared with `!` — tests must configure them
+  - **Swift 6 concurrency**: All stub properties marked `nonisolated(unsafe)`
+  - **Argument structures**: Complex parameters use dedicated structures (e.g.,
+    `LogErrorArguments`)
+
+#### Mock Organization
+
+  - **File naming**: `Mock[ProtocolName].swift`
+  - **Type naming**: `Mock[ProtocolName]`
+  - **Stub properties**: `[functionName]Stub`
+  - **Location**: `Tests/DevKeychainTests/Testing Helpers/`
+
+#### Test Patterns
+
+  - Use `@Test` with Swift Testing framework
+  - Use `#expect()` and `#require()` for assertions
+  - Always configure stubs before use to avoid crashes
+  - Leverage DevTesting's call tracking for verification
+
+
+## Documentation Standards
+
+Follow the project's Markdown Style Guide:
+
+  - **Line length**: 100 characters max
+  - **Code blocks**: Use 4-space indentation, not fenced blocks
+  - **Lists**: Use `-` for bullets, align continuation lines with text
+  - **Spacing**: 2 blank lines between major sections, 1 after headers
+  - **Terminology**: Use "function" over "method", "type" over "class"
+
+When writing Markdown documentation, reference `@Documentation/MarkdownStyleGuide.md` to
+ensure consistent formatting, structure, and style across all project documentation.
+
+
+## Code Formatting and Spacing
+
+The project follows strict spacing conventions for readability and consistency:
+
+  - **2 blank lines between major sections** including:
+    - Between the last property declaration and first function declaration
+    - Between all function/computed property implementations at the same scope level
+    - Between top-level type declarations (class, struct, enum, protocol, extension)
+    - Before MARK comments that separate major sections
+  - **1 blank line** for minor separations:
+    - Between property declarations and nested type definitions
+    - Between all function definitions in protocols
+    - After headers in documentation
+    - After MARK comments that separate major sections
+  - **File endings**: All Swift files must end with exactly one blank line
 
 
 ## Scripts Directory
@@ -147,37 +190,19 @@ The `Scripts/` directory contains utility scripts for development workflow autom
 ### Available Scripts
 
 **`Scripts/install-git-hooks`**:
-  - Installs pre-commit and pre-push git hooks for automated quality checks
-  - Creates `.git/hooks/pre-commit` that calls `Scripts/lint` for formatting validation
-  - Creates `.git/hooks/pre-push` that calls `Scripts/test-all-platforms` for comprehensive testing
-  - Prevents commits with formatting issues and pushes with test failures
-  - Run once per repository to set up automated code quality and testing workflow
+  - Installs a pre-push git hook that runs `Scripts/lint` for formatting validation
+  - Works correctly with git worktrees
+  - Run once per repository to set up automated code quality workflow
 
 **`Scripts/lint`**:
-  - Runs swift-format lint validation with strict mode enabled
+  - Runs `swift format lint` validation with strict mode enabled
   - Checks `App/`, `Sources/`, and `Tests/` directories recursively
   - Returns non-zero exit code if formatting issues are found
-  - Used by pre-commit hooks and can be run manually for code quality verification
+  - Used by pre-push hook and can be run manually for code quality verification
 
-**`Scripts/test-all-platforms`**:
-  - Runs comprehensive tests across all supported Apple platforms
-  - Tests on iOS Simulator (iPhone 16 Pro), macOS, tvOS Simulator (Apple TV 4K), and watchOS
-    Simulator (Apple Watch Series 10)
-  - Uses different project configurations: DevKeychainApp scheme for iOS, DevKeychain scheme for
-    other platforms
-  - Provides colored output with timestamps and clear success/failure indicators
-  - Returns non-zero exit code if any platform tests fail
-  - Essential for local cross-platform validation since CI only tests macOS
-
-### Usage Patterns
-
-  - Run `Scripts/install-git-hooks` after cloning the repository for complete automation
-  - Pre-commit hooks automatically run `Scripts/lint` before each commit
-  - Pre-push hooks automatically run `Scripts/test-all-platforms` before each push
-  - Manual operations:
-    - Code formatting check: `Scripts/lint`
-    - Cross-platform testing: `Scripts/test-all-platforms`
-  - All scripts work from any directory by calculating repository root path
+**`Scripts/format`**:
+  - Runs `swift format --in-place` to automatically fix formatting issues
+  - Formats `App/`, `Sources/`, and `Tests/` directories recursively
 
 
 ## Key Files for Understanding

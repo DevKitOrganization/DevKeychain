@@ -1,7 +1,6 @@
 # Markdown Style Guide
 
-This document defines the Markdown formatting standards for documentation in the Shopper iOS
-codebase.
+This document defines the Markdown formatting standards for documentation in this project.
 
 
 ## General Formatting
@@ -12,9 +11,9 @@ Keep all lines under **100 characters**. Break long sentences and paragraphs at 
 to stay within this limit.
 
     ✅ Good:
-    Faucibus consectetur lacinia nostra eros conubia nibh inceptos hendrerit, ante blandit 
+    Faucibus consectetur lacinia nostra eros conubia nibh inceptos hendrerit, ante blandit
     vulputate imperdiet amet porttitor torquent mattis.
-    
+
     ❌ Bad:
     Faucibus consectetur lacinia nostra eros conubia nibh inceptos hendrerit, ante blandit vulputate imperdiet amet porttitor torquent mattis.
 

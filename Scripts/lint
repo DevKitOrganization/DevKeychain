@@ -8,4 +8,3 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
 # Run swift format lint with full paths to preserve user's PWD
 swift format lint --recursive --strict "$REPO_ROOT/App/" "$REPO_ROOT/Sources/" "$REPO_ROOT/Tests/"
-
