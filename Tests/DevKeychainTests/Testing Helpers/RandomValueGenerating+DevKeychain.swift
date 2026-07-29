@@ -10,6 +10,11 @@ import DevTesting
 import Foundation
 
 extension RandomValueGenerating {
+    mutating func randomAccessibility() -> KeychainItemAccessibility {
+        return randomCase(of: KeychainItemAccessibility.self)!
+    }
+
+
     mutating func randomError() -> MockError {
         return randomCase(of: MockError.self)!
     }

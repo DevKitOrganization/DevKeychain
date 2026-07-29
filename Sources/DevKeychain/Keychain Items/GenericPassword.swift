@@ -20,6 +20,9 @@ public struct GenericPassword: Hashable, Sendable {
     /// If this data is textual, you can use ``password(using:)`` to easily access it.
     public let data: Data
 
+    /// The conditions under which the item can be accessed.
+    public let accessibility: KeychainItemAccessibility
+
 
     /// Returns the item’s secret data as a string.
     ///
@@ -42,10 +45,19 @@ extension GenericPassword {
     ///
     /// - Parameter attributes: A dictionary of attributes from the keychain services API.
     init(attributes: [CFString: Any]) throws {
+        let accessibilityString = try attributes.value(forKeychainAttribute: kSecAttrAccessible, type: String.self)
+        guard let accessibility = KeychainItemAccessibility(string: accessibilityString) else {
+            throw KeychainItemMappingError.attributeTypeMismatch(
+                attribute: kSecAttrAccessible as String,
+                type: KeychainItemAccessibility.self,
+            )
+        }
+
         self.init(
             service: try attributes.value(forKeychainAttribute: kSecAttrService, type: String.self),
             account: try attributes.value(forKeychainAttribute: kSecAttrAccount, type: String.self),
             data: try attributes.value(forKeychainAttribute: kSecValueData, type: Data.self),
+            accessibility: accessibility,
         )
     }
 }
@@ -63,6 +75,11 @@ extension GenericPassword {
         /// The new item’s secret data.
         public var data: Data
 
+        /// The conditions under which the new item can be accessed.
+        ///
+        /// If `nil`, the keychain uses its default accessibility. `nil` by default.
+        public var accessibility: KeychainItemAccessibility?
+
 
         /// Creates generic password addition attributes with secret data.
         ///
@@ -70,10 +87,18 @@ extension GenericPassword {
         ///   - service: The new item’s service.
         ///   - account: The new item’s acocunt.
         ///   - data: The new item’s secret data.
-        public init(service: String, account: String, data: Data) {
+        ///   - accessibility: The conditions under which the new item can be accessed. If `nil`, the keychain
+        ///     uses its default accessibility. `nil` by default.
+        public init(
+            service: String,
+            account: String,
+            data: Data,
+            accessibility: KeychainItemAccessibility? = nil,
+        ) {
             self.service = service
             self.account = account
             self.data = data
+            self.accessibility = accessibility
         }
 
 
@@ -86,17 +111,25 @@ extension GenericPassword {
         ///   - account: The new item’s acocunt.
         ///   - password: The new item’s secret data as a string.
         ///   - encoding: The string encoding to use when converting `password` to `Data`. Defaults to `.utf8`.
-        public init?(service: String, account: String, password: String, encoding: String.Encoding = .utf8) {
+        ///   - accessibility: The conditions under which the new item can be accessed. If `nil`, the keychain
+        ///     uses its default accessibility. `nil` by default.
+        public init?(
+            service: String,
+            account: String,
+            password: String,
+            encoding: String.Encoding = .utf8,
+            accessibility: KeychainItemAccessibility? = nil,
+        ) {
             guard let data = password.data(using: encoding) else {
                 return nil
             }
 
-            self.init(service: service, account: account, data: data)
+            self.init(service: service, account: account, data: data, accessibility: accessibility)
         }
 
 
         public var attributesDictionary: [CFString: Any] {
-            return [
+            var dictionary: [CFString: Any] = [
                 kSecAttrAccount: account,
                 kSecAttrService: service,
                 kSecClass: kSecClassGenericPassword,
@@ -105,6 +138,12 @@ extension GenericPassword {
                 kSecUseDataProtectionKeychain: true,
                 kSecValueData: data,
             ]
+
+            if let accessibility {
+                dictionary[kSecAttrAccessible] = accessibility.attributeValue
+            }
+
+            return dictionary
         }
 
 
@@ -132,6 +171,11 @@ extension GenericPassword {
         /// If `nil`, matching items can have any account. `nil` by default.
         public var account: String?
 
+        /// The accessibility that matching items must have.
+        ///
+        /// If `nil`, matching items can have any accessibility. `nil` by default.
+        public var accessibility: KeychainItemAccessibility?
+
 
         /// Creates a new generic password query.
         ///
@@ -140,9 +184,16 @@ extension GenericPassword {
         ///     `nil` by default.
         ///   - account: The account that matching items must have. If `nil`, matching items can have any account.
         ///     `nil` by default.
-        public init(service: String? = nil, account: String? = nil) {
+        ///   - accessibility: The accessibility that matching items must have. If `nil`, matching items can have
+        ///     any accessibility. `nil` by default.
+        public init(
+            service: String? = nil,
+            account: String? = nil,
+            accessibility: KeychainItemAccessibility? = nil,
+        ) {
             self.service = service
             self.account = account
+            self.accessibility = accessibility
         }
 
 
@@ -152,12 +203,16 @@ extension GenericPassword {
                 kSecUseDataProtectionKeychain: true,
             ]
 
-            if let account = account {
+            if let account {
                 dictionary[kSecAttrAccount] = account
             }
 
-            if let service = service {
+            if let service {
                 dictionary[kSecAttrService] = service
+            }
+
+            if let accessibility {
+                dictionary[kSecAttrAccessible] = accessibility.attributeValue
             }
 
             return dictionary

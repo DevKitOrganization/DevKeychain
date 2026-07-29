@@ -1,6 +1,11 @@
 # DevKeychain Changelog
 
 
+## 1.2.0: July 28, 2026
+
+This update adds support for specifying Keychain item accessibility values.
+
+
 ## 1.1.0: September 24, 2025
 
 This update bumps the minimum supported version of Apple’s OSes to 26.

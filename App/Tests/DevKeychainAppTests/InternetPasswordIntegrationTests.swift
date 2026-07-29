@@ -36,12 +36,14 @@ struct InternetPasswordIntegrationTests: RandomValueGenerating {
                 server: server,
                 account: account,
                 data: randomData(),
+                accessibility: .whenUnlocked,
             )
 
             let addedItem = try keychain.addItem(with: attributes)
             #expect(addedItem.server == attributes.server)
             #expect(addedItem.account == attributes.account)
             #expect(addedItem.data == attributes.data)
+            #expect(addedItem.accessibility == attributes.accessibility)
 
             let queryResults = try keychain.items(matching: addedItem.query, options: .init(limit: 1))
             #expect(queryResults == [addedItem])

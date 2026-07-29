@@ -23,7 +23,12 @@ struct GenericPasswordTests: RandomValueGenerating {
         let password = randomAlphanumericString()
 
         let data = try #require(password.data(using: .utf16))
-        let genericPassword = GenericPassword(service: service, account: account, data: data)
+        let genericPassword = GenericPassword(
+            service: service,
+            account: account,
+            data: data,
+            accessibility: randomAccessibility(),
+        )
         #expect(genericPassword.password(using: .utf16) == password)
     }
 
@@ -34,7 +39,12 @@ struct GenericPasswordTests: RandomValueGenerating {
         let account = randomAlphanumericString()
         let data = randomData(count: 5)
 
-        let genericPassword = GenericPassword(service: service, account: account, data: data)
+        let genericPassword = GenericPassword(
+            service: service,
+            account: account,
+            data: data,
+            accessibility: randomAccessibility(),
+        )
         #expect(genericPassword.password(using: .utf32) == nil)
     }
 
@@ -44,7 +54,12 @@ struct GenericPasswordTests: RandomValueGenerating {
         let service = randomAlphanumericString()
         let account = randomAlphanumericString()
 
-        let genericPassword = GenericPassword(service: service, account: account, data: randomData())
+        let genericPassword = GenericPassword(
+            service: service,
+            account: account,
+            data: randomData(),
+            accessibility: randomAccessibility(),
+        )
         let query = genericPassword.query
 
         #expect(query.service == service)
@@ -55,6 +70,7 @@ struct GenericPasswordTests: RandomValueGenerating {
     @Test
     mutating func initWithAttributesThrowsErrorIfKeyIsMissing() {
         let dictionary: [CFString: Any] = [
+            kSecAttrAccessible: randomAccessibility().attributeValue,
             kSecAttrService: randomAlphanumericString(),
             kSecAttrAccount: randomAlphanumericString(),
             kSecValueData: randomData(),
@@ -72,8 +88,9 @@ struct GenericPasswordTests: RandomValueGenerating {
 
 
     @Test
-    mutating func initWithAttributesThrowsErrorIfKeyIsIncorrectlyTypes() {
+    mutating func initWithAttributesThrowsErrorIfKeyIsIncorrectlyTyped() {
         let dictionary: [CFString: Any] = [
+            kSecAttrAccessible: randomAccessibility().attributeValue,
             kSecAttrService: randomAlphanumericString(),
             kSecAttrAccount: randomAlphanumericString(),
             kSecValueData: randomData(),
@@ -93,18 +110,51 @@ struct GenericPasswordTests: RandomValueGenerating {
                 _ = try GenericPassword(attributes: attributes)
             }
         }
+
+        var attributes = dictionary
+        attributes[kSecAttrAccessible] = randomInt(in: .min ... .max)
+        #expect(
+            throws: KeychainItemMappingError.attributeTypeMismatch(
+                attribute: kSecAttrAccessible as String,
+                type: String.self,
+            )
+        ) {
+            _ = try GenericPassword(attributes: attributes)
+        }
+    }
+
+
+    @Test
+    mutating func initWithAttributesThrowsErrorIfAccessibilityIsUnrecognized() {
+        let attributes: [CFString: Any] = [
+            kSecAttrAccessible: randomAlphanumericString(),
+            kSecAttrService: randomAlphanumericString(),
+            kSecAttrAccount: randomAlphanumericString(),
+            kSecValueData: randomData(),
+        ]
+
+        #expect(
+            throws: KeychainItemMappingError.attributeTypeMismatch(
+                attribute: kSecAttrAccessible as String,
+                type: KeychainItemAccessibility.self,
+            )
+        ) {
+            _ = try GenericPassword(attributes: attributes)
+        }
     }
 
 
     @Test
     mutating func initWithAttributesSetsProperties() throws {
+        let accessibility = randomAccessibility()
         let service = randomAlphanumericString()
         let account = randomAlphanumericString()
         let data = randomData()
 
-        let expected = GenericPassword(service: service, account: account, data: data)
+        let expected = GenericPassword(service: service, account: account, data: data, accessibility: accessibility)
         let actual = try GenericPassword(
             attributes: [
+                kSecAttrAccessible: accessibility.attributeValue,
                 kSecAttrService: service,
                 kSecAttrAccount: account,
                 kSecValueData: data,
@@ -130,6 +180,21 @@ struct GenericPassword_AdditionAttributesTests: RandomValueGenerating {
         #expect(attributes.service == service)
         #expect(attributes.account == account)
         #expect(attributes.data == data)
+        #expect(attributes.accessibility == nil)
+    }
+
+
+    @Test
+    mutating func initWithAccessibilitySetsAccessibility() throws {
+        let accessibility = randomAccessibility()
+
+        let attributes = GenericPassword.AdditionAttributes(
+            service: randomAlphanumericString(),
+            account: randomAlphanumericString(),
+            data: randomData(),
+            accessibility: accessibility,
+        )
+        #expect(attributes.accessibility == accessibility)
     }
 
 
@@ -172,7 +237,7 @@ struct GenericPassword_AdditionAttributesTests: RandomValueGenerating {
 
 
     @Test
-    mutating func attributesDictionaryIsCorrect() {
+    mutating func attributesDictionaryIsCorrectWhenAccessibilityIsNil() {
         let service = randomAlphanumericString()
         let account = randomAlphanumericString()
         let data = randomData()
@@ -180,6 +245,35 @@ struct GenericPassword_AdditionAttributesTests: RandomValueGenerating {
         let attributes = GenericPassword.AdditionAttributes(service: service, account: account, data: data)
 
         let expectedDictionary: [CFString: Any] = [
+            kSecAttrAccount: account,
+            kSecAttrService: service,
+            kSecClass: kSecClassGenericPassword,
+            kSecReturnAttributes: true,
+            kSecReturnData: true,
+            kSecUseDataProtectionKeychain: true,
+            kSecValueData: data,
+        ]
+
+        #expect(attributes.attributesDictionary as CFDictionary == expectedDictionary as CFDictionary)
+    }
+
+
+    @Test
+    mutating func attributesDictionaryIncludesAccessibilityWhenSet() {
+        let accessibility = randomAccessibility()
+        let service = randomAlphanumericString()
+        let account = randomAlphanumericString()
+        let data = randomData()
+
+        let attributes = GenericPassword.AdditionAttributes(
+            service: service,
+            account: account,
+            data: data,
+            accessibility: accessibility,
+        )
+
+        let expectedDictionary: [CFString: Any] = [
+            kSecAttrAccessible: accessibility.attributeValue,
             kSecAttrAccount: account,
             kSecAttrService: service,
             kSecClass: kSecClassGenericPassword,
@@ -223,14 +317,16 @@ struct GenericPassword_AdditionAttributesTests: RandomValueGenerating {
 
     @Test
     mutating func mapReturnsInitializedValue() throws {
+        let accessibility = randomAccessibility()
         let service = randomAlphanumericString()
         let account = randomAlphanumericString()
         let data = randomData()
 
         let attributes = GenericPassword.AdditionAttributes(service: service, account: account, data: data)
-        let expected = GenericPassword(service: service, account: account, data: data)
+        let expected = GenericPassword(service: service, account: account, data: data, accessibility: accessibility)
         let actual = try attributes.mapAddedItem(
             [
+                kSecAttrAccessible: accessibility.attributeValue,
                 kSecAttrService: service,
                 kSecAttrAccount: account,
                 kSecValueData: data,
@@ -250,42 +346,53 @@ struct GenericPassword_QueryTests: RandomValueGenerating {
     mutating func initSetsProperties() throws {
         let service = randomOptional(randomAlphanumericString())
         let account = randomOptional(randomAlphanumericString())
+        let accessibility = randomOptional(randomAccessibility())
 
-        let query = GenericPassword.Query(service: service, account: account)
+        let query = GenericPassword.Query(service: service, account: account, accessibility: accessibility)
         #expect(query.service == service)
         #expect(query.account == account)
+        #expect(query.accessibility == accessibility)
     }
 
 
     @Test
     mutating func attributesDictionaryIsCorrect() throws {
+        let accessibility = randomAccessibility()
         let service = randomAlphanumericString()
         let account = randomAlphanumericString()
 
         let fullAttributesDictionary: [CFString: Any] = [
+            kSecAttrAccessible: accessibility.attributeValue,
             kSecAttrAccount: account,
             kSecAttrService: service,
             kSecClass: kSecClassGenericPassword,
             kSecUseDataProtectionKeychain: true,
         ]
 
-        for isServiceNil in [false, true] {
-            for isAccountNil in [false, true] {
-                let query = GenericPassword.Query(
-                    service: isServiceNil ? nil : service,
-                    account: isAccountNil ? nil : account,
-                )
+        for isAccessibilityNil in [false, true] {
+            for isServiceNil in [false, true] {
+                for isAccountNil in [false, true] {
+                    let query = GenericPassword.Query(
+                        service: isServiceNil ? nil : service,
+                        account: isAccountNil ? nil : account,
+                        accessibility: isAccessibilityNil ? nil : accessibility,
+                    )
 
-                var expectedDictionary = fullAttributesDictionary
-                if isServiceNil {
-                    expectedDictionary.removeValue(forKey: kSecAttrService)
+                    var expectedDictionary = fullAttributesDictionary
+                    if isAccessibilityNil {
+                        expectedDictionary.removeValue(forKey: kSecAttrAccessible)
+                    }
+
+                    if isServiceNil {
+                        expectedDictionary.removeValue(forKey: kSecAttrService)
+                    }
+
+                    if isAccountNil {
+                        expectedDictionary.removeValue(forKey: kSecAttrAccount)
+                    }
+
+                    #expect(query.attributesDictionary as CFDictionary == expectedDictionary as CFDictionary)
                 }
-
-                if isAccountNil {
-                    expectedDictionary.removeValue(forKey: kSecAttrAccount)
-                }
-
-                #expect(query.attributesDictionary as CFDictionary == expectedDictionary as CFDictionary)
             }
         }
     }
@@ -332,11 +439,13 @@ struct GenericPassword_QueryTests: RandomValueGenerating {
                 service: randomAlphanumericString(),
                 account: randomAlphanumericString(),
                 data: randomData(),
+                accessibility: randomAccessibility(),
             )
         }
 
         let rawItems: [[CFString: Any]] = expectedItems.map { item in
             [
+                kSecAttrAccessible: item.accessibility.attributeValue,
                 kSecAttrAccount: item.account,
                 kSecAttrService: item.service,
                 kSecValueData: item.data,
