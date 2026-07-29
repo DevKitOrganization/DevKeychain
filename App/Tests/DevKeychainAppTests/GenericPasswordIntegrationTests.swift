@@ -36,12 +36,14 @@ struct GenericPasswordIntegrationTests: RandomValueGenerating {
                 service: service,
                 account: account,
                 data: randomData(),
+                accessibility: .whenUnlocked,
             )
 
             let addedItem = try keychain.addItem(with: attributes)
             #expect(addedItem.service == attributes.service)
             #expect(addedItem.account == attributes.account)
             #expect(addedItem.data == attributes.data)
+            #expect(addedItem.accessibility == attributes.accessibility)
 
             let queryResults = try keychain.items(matching: addedItem.query, options: .init(limit: 1))
             #expect(queryResults == [addedItem])
