@@ -10,9 +10,9 @@ import DevTesting
 import Foundation
 
 final class MockKeychainItemQuery<Item>: KeychainItemQuery where Item: Sendable {
-    nonisolated(unsafe) var attributesDictionaryStub: Stub<Void, [CFString: Any]>!
-    nonisolated(unsafe) var returnDictionaryStub: Stub<Void, [CFString: Any]>!
-    nonisolated(unsafe) var mapStub: ThrowingStub<AnyObject, [Item], any Error>!
+    nonisolated(unsafe) var attributesDictionaryStub = Stub<Void, [CFString: Any]>()
+    nonisolated(unsafe) var returnDictionaryStub = Stub<Void, [CFString: Any]>()
+    nonisolated(unsafe) var mapStub = ThrowingStub<AnyObject, [Item], any Error>()
 
 
     var attributesDictionary: [CFString: Any] {
