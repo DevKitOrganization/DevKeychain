@@ -1,10 +1,12 @@
-// swift-tools-version: 6.2
+// swift-tools-version: 6.4
 
 import PackageDescription
 
 let swiftSettings: [SwiftSetting] = [
     .enableUpcomingFeature("ExistentialAny"),
+    .enableUpcomingFeature("ImmutableWeakCaptures"),
     .enableUpcomingFeature("MemberImportVisibility"),
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
 ]
 
 let package = Package(
@@ -19,7 +21,7 @@ let package = Package(
     products: [
         .library(
             name: "DevKeychain",
-            targets: ["DevKeychain"]
+            targets: ["DevKeychain"],
         )
     ],
     dependencies: [
@@ -28,7 +30,7 @@ let package = Package(
     targets: [
         .target(
             name: "DevKeychain",
-            swiftSettings: swiftSettings
+            swiftSettings: swiftSettings,
         ),
         .testTarget(
             name: "DevKeychainTests",
@@ -36,7 +38,7 @@ let package = Package(
                 "DevKeychain",
                 "DevTesting",
             ],
-            swiftSettings: swiftSettings
+            swiftSettings: swiftSettings,
         ),
-    ]
+    ],
 )
