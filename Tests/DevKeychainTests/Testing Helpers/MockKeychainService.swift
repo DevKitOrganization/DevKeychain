@@ -11,9 +11,9 @@ import Foundation
 @testable import protocol DevKeychain.KeychainServices
 
 final class MockKeychainServices: KeychainServices {
-    nonisolated(unsafe) var addItemStub: ThrowingStub<[CFString: Any], AnyObject?, any Error>!
-    nonisolated(unsafe) var itemsStub: ThrowingStub<[CFString: Any], AnyObject?, any Error>!
-    nonisolated(unsafe) var deleteItemsStub: ThrowingStub<[CFString: Any], Void, any Error>!
+    nonisolated(unsafe) var addItemStub = ThrowingStub<[CFString: Any], AnyObject?, any Error>()
+    nonisolated(unsafe) var itemsStub = ThrowingStub<[CFString: Any], AnyObject?, any Error>()
+    nonisolated(unsafe) var deleteItemsStub = ThrowingStub<[CFString: Any], Void, any Error>()
 
 
     func addItem(withAttributes attributes: [CFString: Any]) throws -> AnyObject? {
