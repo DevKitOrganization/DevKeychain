@@ -1,6 +1,11 @@
 # DevKeychain Changelog
 
 
+## 1.3.0: November 24, 2026
+
+This release requires Swift 6.4 (Xcode 27) to build. There are no other changes.
+
+
 ## 1.2.0: July 28, 2026
 
 This update adds support for specifying Keychain item accessibility values.
